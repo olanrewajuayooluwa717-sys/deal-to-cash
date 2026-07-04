@@ -1,0 +1,29 @@
+[
+  {
+    "id": "po_3k9x2m",
+    "raw": {
+      "payout_id": "po_3k9x2m",
+      "arrival_date": "2026-07-04",
+      "gross_charges": 4820.5,
+      "stripe_fees": -139.79,
+      "net_payout": 4680.71,
+      "currency": "GBP",
+      "description": "Weekly Shopify sales",
+      "metadata": {
+        "shop": "oak-and-fern.myshopify.com",
+        "orders": "47"
+      }
+    }
+  },
+  {
+    "id": "po_7h2n1q",
+    "raw": {
+      "Payout": "7h2n1q",
+      "Net": "£2,104.20",
+      "Fee": "£61.03",
+      "Gross": 2165.23,
+      "Customer": "Various — e-commerce",
+      "Period": "1 Jul – 3 Jul 2026"
+    }
+  }
+]

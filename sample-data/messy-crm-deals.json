@@ -1,0 +1,40 @@
+[
+  {
+    "id": "deal-1042",
+    "raw": {
+      "deal_id": "1042",
+      "company": "Brightside Plumbing Ltd",
+      "contact_person": "Sam Okafor",
+      "email": "sam@brightside-plumbing.co.uk",
+      "deal_value": 2400,
+      "product": "Annual maintenance contract",
+      "close_date": "04/07/2026",
+      "stage": "Closed Won",
+      "owner": "Jess"
+    }
+  },
+  {
+    "id": "deal-1043",
+    "raw": {
+      "DealID": "1043",
+      "Account Name": "The Green Cafe",
+      "Amount": "£1,850.00",
+      "Description": "POS install + training",
+      "Expected Close": "2026-07-02",
+      "Currency": "gbp",
+      "Notes": "Split 50/50 deposit already paid outside CRM"
+    }
+  },
+  {
+    "id": "deal-1044",
+    "raw": {
+      "id": "1044",
+      "customer_name": null,
+      "company_name": "Riverside Co-working",
+      "total": 3200,
+      "line_items": "Meeting room AV ×2, cabling",
+      "won_at": "2026-07-01T14:22:00Z",
+      "tax_included": true
+    }
+  }
+]
