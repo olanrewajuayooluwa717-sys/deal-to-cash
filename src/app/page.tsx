@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { AskXero } from '@/components/AskXero';
 import { ConnectXero } from '@/components/ConnectXero';
 import { MappingPreview } from '@/components/MappingPreview';
 import { SyncWorkspace } from '@/components/SyncWorkspace';
@@ -44,6 +45,7 @@ export default function Home() {
           setLoading={setLoading}
         />
         <MappingPreview preview={preview} onError={setError} />
+        <AskXero />
       </main>
     </div>
   );

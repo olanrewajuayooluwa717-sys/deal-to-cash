@@ -1,6 +1,7 @@
 import type { TokenSetParameters } from 'xero-node';
 
 export type SourceType = 'crm' | 'stripe' | 'generic';
+export type MappingMode = 'brittle' | 'agent';
 
 export interface MessyRecord {
   id: string;
@@ -45,6 +46,7 @@ export interface SyncPreview {
 export interface SyncPreviewResponse {
   previews: SyncPreview[];
   summary: string;
+  mode: MappingMode;
 }
 
 export interface XeroSession {

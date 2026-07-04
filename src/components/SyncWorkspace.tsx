@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import type { SourceType, SyncPreview, SyncPreviewResponse } from '@/lib/types';
+import type { MappingMode, SourceType, SyncPreviewResponse } from '@/lib/types';
 
 interface SyncWorkspaceProps {
   onPreview: (response: SyncPreviewResponse) => void;
@@ -18,6 +18,7 @@ const SAMPLES: Record<SourceType, { label: string; path: string }> = {
 
 export function SyncWorkspace({ onPreview, onError, loading, setLoading }: SyncWorkspaceProps) {
   const [sourceType, setSourceType] = useState<SourceType>('crm');
+  const [mappingMode, setMappingMode] = useState<MappingMode>('agent');
   const [rawJson, setRawJson] = useState('');
 
   async function loadSample() {
@@ -44,7 +45,7 @@ export function SyncWorkspace({ onPreview, onError, loading, setLoading }: SyncW
       const res = await fetch('/api/sync/preview', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ sourceType, records }),
+        body: JSON.stringify({ sourceType, records, mode: mappingMode }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? 'Preview failed');
@@ -60,8 +61,41 @@ export function SyncWorkspace({ onPreview, onError, loading, setLoading }: SyncW
     <div className="rounded-xl border border-zinc-200 bg-white p-5 shadow-sm">
       <h2 className="text-lg font-semibold text-zinc-900">2. Import messy data</h2>
       <p className="mt-1 text-sm text-zinc-600">
-        Paste records from a CRM, Stripe, or any export. The AI agent maps them to Xero invoices.
+        Paste records from a CRM, Stripe, or any export. Compare brittle rules vs adaptive agent mapping.
       </p>
+
+      <div className="mt-4 rounded-lg border border-zinc-200 bg-zinc-50 p-3">
+        <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500">Mapping engine</p>
+        <div className="mt-2 flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => setMappingMode('brittle')}
+            className={`rounded-lg px-3 py-2 text-sm font-medium ${
+              mappingMode === 'brittle'
+                ? 'bg-red-600 text-white'
+                : 'bg-white text-zinc-700 ring-1 ring-zinc-300 hover:bg-zinc-100'
+            }`}
+          >
+            Zapier Mode (brittle)
+          </button>
+          <button
+            type="button"
+            onClick={() => setMappingMode('agent')}
+            className={`rounded-lg px-3 py-2 text-sm font-medium ${
+              mappingMode === 'agent'
+                ? 'bg-[#13B5EA] text-white'
+                : 'bg-white text-zinc-700 ring-1 ring-zinc-300 hover:bg-zinc-100'
+            }`}
+          >
+            Agent Mode (adaptive)
+          </button>
+        </div>
+        <p className="mt-2 text-xs text-zinc-600">
+          {mappingMode === 'brittle'
+            ? 'Exact field names only — watch it break on `Account Name` and `£1,850.00`.'
+            : 'AI interprets messy fields, parses currency, explains every mapping.'}
+        </p>
+      </div>
 
       <div className="mt-4 flex flex-wrap gap-2">
         {(Object.keys(SAMPLES) as SourceType[]).map((type) => (
@@ -100,10 +134,8 @@ export function SyncWorkspace({ onPreview, onError, loading, setLoading }: SyncW
         disabled={loading || !rawJson.trim()}
         className="mt-4 rounded-lg bg-zinc-900 px-4 py-2.5 text-sm font-semibold text-white hover:bg-zinc-800 disabled:opacity-50"
       >
-        {loading ? 'Mapping with AI…' : 'Preview Xero mapping'}
+        {loading ? 'Mapping…' : mappingMode === 'brittle' ? 'Preview brittle mapping' : 'Preview agent mapping'}
       </button>
     </div>
   );
 }
-
-export type { SyncPreview };

@@ -5,6 +5,7 @@ import type { MessyRecord, SourceType } from '@/lib/types';
 
 const bodySchema = z.object({
   sourceType: z.enum(['crm', 'stripe', 'generic']),
+  mode: z.enum(['brittle', 'agent']).optional().default('agent'),
   records: z.array(
     z.object({
       id: z.string(),
@@ -21,8 +22,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 });
     }
 
-    const { sourceType, records } = parsed.data;
-    const result = await mapRecordsToXero(records as MessyRecord[], sourceType as SourceType);
+    const { sourceType, records, mode } = parsed.data;
+    const result = await mapRecordsToXero(records as MessyRecord[], sourceType as SourceType, mode);
     return NextResponse.json(result);
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Preview failed';

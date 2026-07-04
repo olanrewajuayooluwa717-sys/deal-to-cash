@@ -1,10 +1,11 @@
 import { XeroClient } from 'xero-node';
 
+// New Xero apps (from Mar 2026) require granular scopes — accounting.transactions is invalid.
 const SCOPES = [
   'openid',
   'profile',
   'email',
-  'accounting.transactions',
+  'accounting.invoices',
   'accounting.contacts',
   'accounting.settings',
   'offline_access',

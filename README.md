@@ -27,7 +27,7 @@ Open [http://localhost:3000](http://localhost:3000).
 
 1. Create a **Web app** at [Xero Developer](https://developer.xero.com/app/manage)
 2. Set redirect URI: `http://localhost:3000/api/xero/callback`
-3. Scopes: `openid`, `profile`, `email`, `accounting.transactions`, `accounting.contacts`, `accounting.settings`, `offline_access`
+3. Scopes: `openid`, `profile`, `email`, `accounting.invoices`, `accounting.contacts`, `accounting.settings`, `offline_access`
 4. Use a **demo company** — not production data
 
 ### Optional: OpenAI
