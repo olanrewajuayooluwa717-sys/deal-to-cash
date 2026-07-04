@@ -1,5 +1,5 @@
 import { Invoice, LineAmountTypes } from 'xero-node';
-import { getXeroClient } from './xero';
+import { getAuthenticatedXero } from './xero-auth';
 import type { XeroInvoiceDraft, XeroSession } from './types';
 
 // Future: swap xero-node calls for @xeroapi/xero-mcp-server via XERO_CLIENT_BEARER_TOKEN
@@ -9,20 +9,18 @@ export async function createInvoiceInXero(
   session: XeroSession,
   draft: XeroInvoiceDraft,
 ): Promise<{ invoiceId: string; invoiceNumber?: string }> {
-  const xero = getXeroClient();
-  await xero.initialize();
-  xero.setTokenSet(session.tokenSet);
+  const { xero, session: activeSession } = await getAuthenticatedXero(session);
 
   const contactName = draft.contactName;
   const contacts = await xero.accountingApi.getContacts(
-    session.tenantId,
+    activeSession.tenantId,
     undefined,
     `Name=="${contactName.replace(/"/g, '\\"')}"`,
   );
   let contactId = contacts.body.contacts?.[0]?.contactID;
 
   if (!contactId) {
-    const created = await xero.accountingApi.createContacts(session.tenantId, {
+    const created = await xero.accountingApi.createContacts(activeSession.tenantId, {
       contacts: [
         {
           name: contactName,
@@ -55,7 +53,7 @@ export async function createInvoiceInXero(
     })),
   };
 
-  const result = await xero.accountingApi.createInvoices(session.tenantId, { invoices: [invoice] });
+  const result = await xero.accountingApi.createInvoices(activeSession.tenantId, { invoices: [invoice] });
   const created = result.body.invoices?.[0];
   if (!created?.invoiceID) {
     throw new Error('Xero did not return an invoice ID');

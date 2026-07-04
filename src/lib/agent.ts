@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 import { z } from 'zod';
+import { formatApiError, openAiKey } from './xero-auth';
 import type { MappingMode, MessyRecord, SourceType, SyncPreview, SyncPreviewResponse } from './types';
 
 const previewSchema = z.object({
@@ -196,7 +197,10 @@ function heuristicPreview(records: MessyRecord[], sourceType: SourceType): SyncP
 }
 
 async function aiPreview(records: MessyRecord[], sourceType: SourceType): Promise<SyncPreviewResponse> {
-  const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  const apiKey = openAiKey();
+  if (!apiKey) throw new Error('OPENAI_API_KEY not set');
+
+  const openai = new OpenAI({ apiKey });
 
   const system = `You are Deal-to-Cash — an invoice and contact mapping specialist for Xero (inspired by Xero Agent Toolkit patterns).
 
@@ -250,8 +254,12 @@ export async function mapRecordsToXero(
     return brittlePreview(records, sourceType);
   }
 
-  if (process.env.OPENAI_API_KEY) {
-    return aiPreview(records, sourceType);
+  if (openAiKey()) {
+    try {
+      return await aiPreview(records, sourceType);
+    } catch (err) {
+      throw new Error(`OpenAI mapping failed: ${formatApiError(err)}`);
+    }
   }
 
   return heuristicPreview(records, sourceType);

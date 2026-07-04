@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
 import { askXero } from '@/lib/xero-chat';
+import { formatApiError } from '@/lib/xero-auth';
 import { getXeroSession } from '@/lib/session';
 
 const bodySchema = z.object({
@@ -23,7 +24,7 @@ export async function POST(req: NextRequest) {
     const reply = await askXero(session, parsed.data.message);
     return NextResponse.json({ reply });
   } catch (err) {
-    const message = err instanceof Error ? err.message : 'Chat failed';
+    const message = formatApiError(err);
     return NextResponse.json({ error: message }, { status: 500 });
   }
 }
